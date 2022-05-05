@@ -1,3 +1,12 @@
+# 2022 update
+
+This is a fork of [asterisk-ami-events-stream](https://github.com/BelirafoN/asterisk-ami-events-stream) and [this](https://github.com/rvleyden/asterisk-ami-events-stream)   
+Major differences:
+- the local version does not correspond with the original repo
+- package name `@artcosoft/ami-events-stream`
+- added typescript support
+- the lib needs to be compiled before publishing
+
 # Asterisk AMI Events Stream for NodeJS (ES2015) 
 
 [![Build Status](https://travis-ci.org/BelirafoN/asterisk-ami-events-stream.svg?branch=master)](https://travis-ci.org/BelirafoN/asterisk-ami-events-stream)

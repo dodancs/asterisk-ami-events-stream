@@ -145,4 +145,5 @@ Icon?
 # tmp folders & files
 tmp
 
-
+package-lock.json
+lib/

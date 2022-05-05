@@ -6,16 +6,26 @@
 
 "use strict";
 
-const Transform = require('stream').Transform;
-const eventUtils = require('asterisk-ami-event-utils');
+import {Transform, TransformCallback} from 'stream';
+import eventUtils from '@artcosoft/ami-event-utils';
+
 const COMMAND_END = '--END COMMAND--';
 
 /**
  * Ami Event Emitter
  */
-class AmiEventsStream extends Transform{
+export class AmiEventsStream extends Transform {
 
-    constructor(){
+    private _parser: (obj: any) => any = eventUtils.toObject;
+    private _rawData: Array<any> = []
+    private _sawFirstCrLf: boolean = false;
+    private _buffer: any = null;
+    private _lastAmiEvent: any = null;
+    private _lastAmiResponse: any = null;
+    private _lastAmiAction: any = null;
+    private _isEmitted: boolean = true;
+
+    constructor() {
         super();
         Object.assign(this, {
             _parser: eventUtils.toObject,
@@ -33,7 +43,7 @@ class AmiEventsStream extends Transform{
      *
      * @returns {*}
      */
-    getLastEvent(){
+    getLastEvent() {
         return this._lastAmiEvent;
     }
 
@@ -41,7 +51,7 @@ class AmiEventsStream extends Transform{
      *
      * @returns {*}
      */
-    get lastEvent(){
+    get lastEvent() {
         return this.getLastEvent();
     }
 
@@ -49,7 +59,7 @@ class AmiEventsStream extends Transform{
      *
      * @returns {null}
      */
-    getLastResponse(){
+    getLastResponse() {
         return this._lastAmiResponse;
     }
 
@@ -57,7 +67,7 @@ class AmiEventsStream extends Transform{
      *
      * @returns {null}
      */
-    get lastResponse(){
+    get lastResponse() {
         return this.getLastResponse();
     }
 
@@ -65,7 +75,7 @@ class AmiEventsStream extends Transform{
      *
      * @returns {*}
      */
-    getLastAction(){
+    getLastAction() {
         return this._lastAmiAction;
     }
 
@@ -73,7 +83,7 @@ class AmiEventsStream extends Transform{
      *
      * @returns {null}
      */
-    get lastAction(){
+    get lastAction() {
         return this.getLastAction();
     }
 
@@ -84,17 +94,17 @@ class AmiEventsStream extends Transform{
      * @param done
      * @private
      */
-    _transform(chunk, encoding, done){
+    _transform(chunk: any, encoding: BufferEncoding, done: TransformCallback) {
         let chunkSlice = chunk;
 
-        if(this._rawData.length){
+        if (this._rawData.length) {
             chunkSlice = Buffer.concat(this._rawData.concat([chunkSlice]));
             this._rawData = [];
         }
 
         let parseGen = this._parse(chunkSlice);
 
-        while(chunkSlice){
+        while (chunkSlice) {
             chunkSlice = parseGen.next(chunkSlice).value;
         }
         done();
@@ -105,24 +115,24 @@ class AmiEventsStream extends Transform{
      * @param chunk
      * @private
      */
-    _analyzeSimple(chunk){
+    _analyzeSimple(chunk: Buffer) {
         let chunkLength = chunk.length;
 
         for (let i = 0; i < chunkLength; i++) {
-            if (chunk[i] === 13 && i + 1 < chunkLength && chunk[i + 1] === 10){
+            if (chunk[i] === 13 && i + 1 < chunkLength && chunk[i + 1] === 10) {
                 i++;
 
-                if (this._sawFirstCrLf){
+                if (this._sawFirstCrLf) {
                     this._buffer = chunk.slice(0, i);
                     this._emission(this._buffer);
                     this._sawFirstCrLf = false;
                     return chunk.slice(i);
 
-                }else{
+                } else {
                     this._sawFirstCrLf = true;
                 }
 
-            }else{
+            } else {
                 this._sawFirstCrLf = false;
             }
         }
@@ -135,13 +145,15 @@ class AmiEventsStream extends Transform{
      * @param chunk
      * @private
      */
-    _analyzeExtend(chunk){
+    _analyzeExtend(chunk: Buffer) {
         let chunkStr = eventUtils.toString(chunk),
             indexOfEnd = chunkStr.indexOf(COMMAND_END);
 
-        if(chunkStr === ''){ return null; }
-        
-        if(~indexOfEnd){
+        if (chunkStr === '') {
+            return null;
+        }
+
+        if (~indexOfEnd) {
             this._emission(chunk.slice(0, indexOfEnd + COMMAND_END.length + 1));
             return chunk.slice(indexOfEnd + COMMAND_END.length + 1);
         }
@@ -154,9 +166,9 @@ class AmiEventsStream extends Transform{
      * @returns {null}
      * @private
      */
-    * _parse(chunk){
+    * _parse(chunk: Buffer) {
         let chunkSlice = chunk;
-        while(chunkSlice){
+        while (chunkSlice) {
             chunkSlice = this._isEmitted && !/^Response:\sFollows/i.test(eventUtils.toString(chunkSlice)) ?
                 yield this._analyzeSimple(chunkSlice) : yield this._analyzeExtend(chunkSlice);
         }
@@ -168,19 +180,19 @@ class AmiEventsStream extends Transform{
      * @param eventBuffer
      * @private
      */
-    _emission(eventBuffer){
+    _emission(eventBuffer: Buffer) {
         let eventStr = eventUtils.toString(eventBuffer);
 
-        if(eventStr.length){
-            if(/^Event/i.test(eventStr)){
+        if (eventStr.length) {
+            if (/^Event/i.test(eventStr)) {
                 this._lastAmiEvent = this._parser(eventBuffer);
                 this.emit('amiEvent', this._lastAmiEvent);
 
-            }else if(/^Action/i.test(eventStr)){
+            } else if (/^Action/i.test(eventStr)) {
                 this._lastAmiAction = this._parser(eventBuffer);
                 this.emit('amiAction', this._lastAmiAction);
 
-            }else{
+            } else {
                 this._lastAmiResponse = this._parser(eventBuffer);
                 this.emit('amiResponse', this._lastAmiResponse);
             }
@@ -191,5 +203,3 @@ class AmiEventsStream extends Transform{
         return this;
     }
 }
-
-module.exports = AmiEventsStream;
