@@ -19,25 +19,12 @@ export class AmiEventsStream extends Transform {
     private _parser: (obj: any) => any = eventUtils.toObject;
     private _rawData: Array<any> = []
     private _sawFirstCrLf: boolean = false;
-    private _buffer: any = null;
+    private _buffer?: Buffer;
     private _lastAmiEvent: any = null;
     private _lastAmiResponse: any = null;
     private _lastAmiAction: any = null;
     private _isEmitted: boolean = true;
 
-    constructor() {
-        super();
-        Object.assign(this, {
-            _parser: eventUtils.toObject,
-            _rawData: [],
-            _sawFirstCrLf: false,
-            _buffer: null,
-            _lastAmiEvent: null,
-            _lastAmiResponse: null,
-            _lastAmiAction: null,
-            _isEmitted: true
-        });
-    }
 
     /**
      *

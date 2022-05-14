@@ -9,7 +9,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const FixtureTransformer = require('./fixtures/FixtureTransformer');
-const AmiEventEmitter = require('../lib/AmiEventsStream');
+const {AmiEventsStream} = require('../lib/AmiEventsStream');
 
 describe('AmiEventsStream internal functionality', function() {
     this.timeout(process.env.MOCHA_TIMEOUT || 2000);
@@ -19,7 +19,7 @@ describe('AmiEventsStream internal functionality', function() {
         fixtureTransformer = null;
 
     beforeEach(() => {
-        eventEmitter = new AmiEventEmitter();
+        eventEmitter = new AmiEventsStream();
         fixtureTransformer = new FixtureTransformer();
         readStream = fs.createReadStream('./test/fixtures/ami.dump').pipe(fixtureTransformer);
         readStream.on('error', error => console.log(error));
