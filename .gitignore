@@ -147,3 +147,4 @@ tmp
 
 package-lock.json
 lib/
+.idea
