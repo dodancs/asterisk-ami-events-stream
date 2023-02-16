@@ -1,7 +1,7 @@
 {
-  "name": "@artcosoft/ami-events-stream",
-  "version": "0.1.1",
-  "description": "Asterisk AMI Events Stream for NodeJS (ES2015)",
+  "name": "@dodancs/asterisk-ami-events-stream",
+  "version": "0.1.2",
+  "description": "Asterisk AMI Events Stream for NodeJS \\w TypeScript support",
   "main": "lib/AmiEventsStream.js",
   "types": "lib/AmiEventsStream.d.ts",
   "private": false,
@@ -10,10 +10,11 @@
   },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf ./lib || true",
+    "move_libs": "mkdir -p lib && mv src/*.js lib/ && mv src/*.d.ts lib/",
+    "clean": "rm -rf lib/ && find . -maxdepth 2 -type f \\( -name '*.js' -o -name '*.d.ts' \\) -not -path './node_modules/*' -delete",
     "test": "mocha ./test",
     "coverage": "istanbul cover _mocha -- -R spec",
-    "build_and_publish": "npm run clean && npm run build && npm publish --access=public"
+    "build_and_publish": "npm run clean && npm run build && npm run move_libs && npm publish --access=public"
   },
   "directories": {
     "src": "./src",
@@ -21,10 +22,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/artcosoft/asterisk-ami-events-stream.git"
+    "url": "https://github.com/dodancs/asterisk-ami-events-stream.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org"
   },
   "keywords": [
     "voip",
@@ -35,15 +36,21 @@
     "name": "Alex Voronyansky",
     "email": "belirafon@gmail.com"
   },
-  "license": "MIT",
+  "bugs": {
+    "email": "dominik+npmjs@dancs.sk"
+  },
   "devDependencies": {
-    "@types/node": "^17.0.31",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.13.0",
+    "chai": "^4.3.7",
     "coveralls": "^3.1.1",
     "istanbul": "^0.4.5",
-    "mocha": "^10.0.0",
-    "typescript": "^4.6.4"
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@artcosoft/ami-event-utils": "^0.1.2"
-  }
+    "@dodancs/asterisk-ami-event-utils": "^0.1.3"
+  },
+  "license": "MIT"
 }

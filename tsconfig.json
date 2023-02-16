@@ -2,16 +2,20 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
-    "declaration": true,                      /* Generates corresponding '.d.ts' file. */
-    "strict": true,                           /* Enable all strict type-checking options. */
+    "declaration": true, /* Generates corresponding '.d.ts' file. */
+    "strict": true, /* Enable all strict type-checking options. */
     "moduleResolution": "node",
-    "outDir": "./lib",
-    "rootDir": "./src",
+    // "outDir": "./lib",
+    // "rootDir": "./src",
     /* Advanced Options */
-    "skipLibCheck": true,                     /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+    "skipLibCheck": true, /* Skip type checking of declaration files. */
+    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
+  "include": [
+    "./**/*.ts",
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "lib"
   ]
 }

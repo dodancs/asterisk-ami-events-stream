@@ -4,18 +4,16 @@
  * Time: 15:39
  */
 
-"use strict";
+import { assert } from "chai";
+import * as fs from "fs";
+import { AmiEventsStream, AmiEventType } from "../src/AmiEventsStream";
+import FixtureTransformer from "./fixtures/FixtureTransformer";
 
-const assert = require('assert');
-const fs = require('fs');
-const FixtureTransformer = require('./fixtures/FixtureTransformer');
-const {AmiEventsStream} = require('../lib/AmiEventsStream');
-
-describe('AmiEventsStream internal functionality', function() {
+describe('AmiEventsStream internal functionality', function () {
     this.timeout(process.env.MOCHA_TIMEOUT || 2000);
 
-    let eventEmitter = null,
-        readStream = null,
+    let eventEmitter: AmiEventsStream,
+        readStream: FixtureTransformer,
         fixtureTransformer = null;
 
     beforeEach(() => {
@@ -66,17 +64,17 @@ describe('AmiEventsStream internal functionality', function() {
     });
 
     it('Emit events & apply parse-function', done => {
-        let events = {};
+        let events = new Map<AmiEventType, any>();
         eventEmitter.on('amiEvent', event => {
-            if(!events[event['Event']]){
-                events[event['Event']] = [event];
-            }else{
-                events[event['Event']].push(event);
+            if (!events.has(event['Event'])) {
+                events.set(event['Event'], [event]);
+            } else {
+                events.get(event['Event']).push(event);
             }
         });
         readStream.on('end', () => {
-            assert.equal(events['Hangup'].length, 1);
-            assert.equal(events['HangupRequest'].length, 3);
+            assert.equal(events.get('Hangup').length, 1);
+            assert.equal(events.get('HangupRequest').length, 3);
             done();
         });
         readStream.pipe(eventEmitter);

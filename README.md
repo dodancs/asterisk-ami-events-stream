@@ -1,18 +1,9 @@
-# 2022 update
+# Asterisk AMI Events Stream for NodeJS \w TypeScript support
 
-This is a fork of [asterisk-ami-events-stream](https://github.com/BelirafoN/asterisk-ami-events-stream) and [this](https://github.com/rvleyden/asterisk-ami-events-stream)   
-Major differences:
-- the local version does not correspond with the original repo
-- package name `@artcosoft/ami-events-stream`
-- added typescript support
-- the lib needs to be compiled before publishing
+[![Coverage Status](https://coveralls.io/repos/dodancs/asterisk-ami-event-utils/badge.svg)](https://coveralls.io/github/dodancs/asterisk-ami-event-stream)
+[![npm version](https://badge.fury.io/js/@dodancs%2Fasterisk-ami-event-utils.svg)](https://badge.fury.io/js/@dodancs%2Fasterisk-ami-event-stream)
 
-# Asterisk AMI Events Stream for NodeJS (ES2015) 
-
-[![Build Status](https://travis-ci.org/BelirafoN/asterisk-ami-events-stream.svg?branch=master)](https://travis-ci.org/BelirafoN/asterisk-ami-events-stream)
-[![Coverage Status](https://coveralls.io/repos/BelirafoN/asterisk-ami-events-stream/badge.svg)](https://coveralls.io/r/BelirafoN/asterisk-ami-events-stream)
-[![Code Climate](https://codeclimate.com/github/BelirafoN/asterisk-ami-events-stream/badges/gpa.svg)](https://codeclimate.com/github/BelirafoN/asterisk-ami-events-stream)
-[![npm version](https://badge.fury.io/js/asterisk-ami-events-stream.svg)](https://badge.fury.io/js/asterisk-ami-events-stream)
+Fork of [asterisk-ami-events-stream](https://github.com/BelirafoN/asterisk-ami-events-stream) and [rvleyden/asterisk-ami-events-stream](https://github.com/rvleyden/asterisk-ami-events-stream)
 
 This is a transform stream for AMI socket. This stream has a three custom events: 
 
@@ -36,7 +27,7 @@ In above case, body of this response will be available in `$content` property of
 ### Install 
 
 ```bash 
-$ npm i asterisk-ami-events-stream
+$ npm i @dodancs/asterisk-ami-events-stream
 ```
 
 ### NodeJS versions 
@@ -96,7 +87,7 @@ For examples, please, see tests `./test/*`.
 Tests require [Mocha](https://mochajs.org/). 
 
 ```bash 
-mocha ./tests
+mocha ./test
 ``` 
 
 or with `npm` 
