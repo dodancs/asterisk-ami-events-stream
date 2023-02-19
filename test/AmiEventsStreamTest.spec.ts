@@ -6,7 +6,7 @@
 
 import { assert } from "chai";
 import * as fs from "fs";
-import { AmiEventsStream, AmiEventType } from "../src/AmiEventsStream";
+import { AmiEventsStream } from "../src/AmiEventsStream";
 import FixtureTransformer from "./fixtures/FixtureTransformer";
 
 describe('AmiEventsStream internal functionality', function () {
@@ -64,17 +64,17 @@ describe('AmiEventsStream internal functionality', function () {
     });
 
     it('Emit events & apply parse-function', done => {
-        let events = new Map<AmiEventType, any>();
+        let events = new Map<string, Record<string, string>[]>();
         eventEmitter.on('amiEvent', event => {
             if (!events.has(event['Event'])) {
                 events.set(event['Event'], [event]);
             } else {
-                events.get(event['Event']).push(event);
+                events.get(event['Event'])?.push(event);
             }
         });
         readStream.on('end', () => {
-            assert.equal(events.get('Hangup').length, 1);
-            assert.equal(events.get('HangupRequest').length, 3);
+            assert.equal(events.get('Hangup')?.length, 1);
+            assert.equal(events.get('HangupRequest')?.length, 3);
             done();
         });
         readStream.pipe(eventEmitter);
@@ -82,7 +82,7 @@ describe('AmiEventsStream internal functionality', function () {
 
     it('Get last amiEvent with events', done => {
         let eventsCount = 0,
-            expectedEvent = {
+            expectedEvent: Record<string, string> = {
                 Event: 'HangupRequest',
                 Privilege: 'call,all',
                 Channel: 'Local/160@from-queue-002e58e7;2',
