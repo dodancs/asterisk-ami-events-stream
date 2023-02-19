@@ -9,7 +9,7 @@ import eventUtils from '@dodancs/asterisk-ami-event-utils';
 
 const COMMAND_END = '--END COMMAND--';
 
-export type AmiEvent = Record<string, string>;
+export type AmiEvent = Record<string, string | undefined | null>;
 
 /**
  * Ami Event Emitter
