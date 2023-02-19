@@ -9,6 +9,8 @@ import eventUtils from '@dodancs/asterisk-ami-event-utils';
 
 const COMMAND_END = '--END COMMAND--';
 
+export type AmiEvent = Record<string, string>;
+
 /**
  * Ami Event Emitter
  */
@@ -18,9 +20,9 @@ export class AmiEventsStream extends Transform {
     private _rawData: Array<any> = [];
     private _sawFirstCrLf: boolean = false;
     private _buffer?: Buffer;
-    private _lastAmiEvent: Record<string, string> | null = null;
-    private _lastAmiResponse: Record<string, string> | null = null;
-    private _lastAmiAction: Record<string, string> | null = null;
+    private _lastAmiEvent: AmiEvent | null = null;
+    private _lastAmiResponse: AmiEvent | null = null;
+    private _lastAmiAction: AmiEvent | null = null;
     private _isEmitted: boolean = true;
 
 

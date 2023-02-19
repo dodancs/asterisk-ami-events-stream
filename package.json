@@ -1,6 +1,6 @@
 {
   "name": "@dodancs/asterisk-ami-events-stream",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Asterisk AMI Events Stream for NodeJS \\w TypeScript support",
   "main": "lib/AmiEventsStream.js",
   "types": "lib/AmiEventsStream.d.ts",
@@ -50,7 +50,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@dodancs/asterisk-ami-event-utils": "^0.1.3"
+    "@dodancs/asterisk-ami-event-utils": "^0.1.4"
   },
   "license": "MIT"
 }
